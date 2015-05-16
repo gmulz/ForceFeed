@@ -3,7 +3,7 @@ package models;
 import play.db.ebean.Model;
 
 
-public class Request extends Model{
+public class Paragraph extends Model{
 	private String paragraph;
 	private String[] keywords;
 

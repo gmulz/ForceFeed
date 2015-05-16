@@ -3,7 +3,7 @@ package models;
 import play.db.ebean.Model;
 
 
-public class Request extends Model{
+public class ServerRequest extends Model{
 	private String url;
 	private int tNum;
 

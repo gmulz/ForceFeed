@@ -21,8 +21,11 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 #
 #
-#
-#
+# POST REQUEST FORMAT
+# {
+#	url:string
+#	tNum: int	
+# }
 #
 #
 #

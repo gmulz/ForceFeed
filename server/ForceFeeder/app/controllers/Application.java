@@ -17,29 +17,37 @@ import play.libs.F.Promise;
 import java.io.IOException;
 import java.util.Random;
 import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import models.Request;
+import models.ServerRequest;
+import models.Paragraph;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class Application extends Controller {
-
+	private static HashSet<String> doneGifs = new HashSet<String>();
 	public static Result index(){
 		return ok("pants");
 	}
     public static Result process() {
-        
-    	Request r = Json.fromJson(request().body().asJson(),Request.class);
+        ArrayList<Paragraph> paragraphList = new ArrayList<Paragraph>();
+    	ServerRequest r = Json.fromJson(request().body().asJson(),ServerRequest.class);
     	
     	String url = r.getUrl();
     	int templateNumber = r.getTNum();
 
-    	WSRequestHolder holder = WS.url("http://thehoneybee.us/comedy/alchemyapi.php")
+    	WSRequestHolder holder = WS.url("http://thehoneybee.us/comedy/extract_url.php")
     								.setQueryParameter("url",url);
-    	Promise<JsonNode> jsonPromise = WS.url(url).get().map(
+    	Promise<JsonNode> jsonPromise = holder.get().map(
 		    new Function<WSResponse, JsonNode>() {
 		        public JsonNode apply(WSResponse response) {
 		            JsonNode json = response.asJson();
@@ -49,25 +57,90 @@ public class Application extends Controller {
 		);
 
 
-		AlchemyResponse alresp = Json.fromJson(jsonPromise.get(),AlchemyResponse.class);
-		Paragraph[] segments = alresp.getParagraphs();
+    	JsonNode response = jsonPromise.get(5000);
+    	Iterator<JsonNode> arrs = response.elements();
+
+    	while(arrs.hasNext()){
+    		Paragraph nextPara = parseGarysBullshit(arrs.next());
+    		paragraphList.add(nextPara);
+    	}
+		//AlchemyResponse alresp = Json.fromJson(jsonPromise.get(),AlchemyResponse.class);
+		//Paragraph[] segments = alresp.getParagraphs();
+
+    	
+    	ObjectNode ret = null;
 
 		switch(templateNumber){
 			case 1:
+				ret = processTemplateOne(paragraphList);
 				break;
 			case 2:
 				break;
 			case 3:
 				break;
 			case 4:
-				
+				break;
+			default:
+
 				break;
 		}
 
-
+		return ok(ret);
 
 
         
+    }
+
+
+    private static ObjectNode processTemplateOne(ArrayList<Paragraph> paragraphs){
+    	Random random = new Random();
+    	ArrayList<ForceFedParagraph> newParagraphs = new ArrayList<ForceFedParagraph>();
+    	for(Paragraph paragraph : paragraphs){
+    		ForceFedParagraph f = new ForceFedParagraph();
+    		f.summary = paragraph.getParagraph().split("\\. ")[0];
+
+    		for(int i=0;i<5;i++){
+    			String[] keywords = paragraph.getKeywords();
+    			String keyword = keywords[random.nextInt(keywords.length)];
+    			String imgurl = getGiphyGif(keyword);
+    			if(imgurl.equals("")){
+    				try{
+    					imgurl = getGooglePicture(keyword);
+    				}
+    				catch(IOException e){
+    					System.out.println("derp");
+    				}
+    			}
+    			f.gifs.add(imgurl);
+    		}
+    		newParagraphs.add(f);
+    	}
+    	ObjectNode result = Json.newObject();
+    	result.put("template",1);
+    	ArrayNode contentArray = result.putArray("content");
+    	for(ForceFedParagraph ffp : newParagraphs){
+    		ObjectNode contentObj = contentArray.addObject();
+    		contentObj.put("type","text");
+    		contentObj.put("content",ffp.summary);
+    		for(String image : ffp.gifs){
+    			ObjectNode newImageObj = contentArray.addObject();
+    			newImageObj.put("type","image");
+    			newImageObj.put("content",image);
+    		}
+    	}
+    	return result;
+
+
+    }
+
+    private static class ForceFedParagraph{
+    	String summary;
+    	ArrayList<String> gifs;
+
+    	ForceFedParagraph(){
+    		summary = "";
+    		gifs = new ArrayList<String>();
+    	}
     }
 
     private static String getGooglePicture(String qry) throws IOException{
@@ -110,7 +183,51 @@ public class Application extends Controller {
 	}
 
 	private static String getGiphyGif(String qry){
-
+		Random random = new Random();
+		String url ="http://api.giphy.com/v1/gifs/search?q=";
+		String[] query = qry.split(" ");
+		for(String s:query){
+			url = url.concat(s+"+");
+		}
+		url = url.concat("&api_key=dc6zaTOxFJmzC");
+		WSRequestHolder holder = WS.url(url);
+    	Promise<JsonNode> jsonPromise = holder.get().map(
+		    new Function<WSResponse, JsonNode>() {
+		        public JsonNode apply(WSResponse response) {
+		            JsonNode json = response.asJson();
+		            return json;
+		        }
+		    }
+		);
+		JsonNode gifJson = jsonPromise.get(5000);
+		Iterator<JsonNode> dataIterator = gifJson.get("data").elements();
+		int i = 0;
+		int rando = random.nextInt(25);
+		String ret = "";
+		while(dataIterator.hasNext()){
+			JsonNode gifObj = dataIterator.next();
+			if(rando==i || !dataIterator.hasNext()){
+				ret = gifObj.get("embed_url").asText();
+			}
+		}
+		System.out.println(ret);
+		return ret;
 	}
 
+
+	private static Paragraph parseGarysBullshit(JsonNode array){
+		Paragraph ret = new Paragraph();
+		int i = 0;
+		Iterator<JsonNode> data = array.elements();
+		while(data.hasNext()){
+			if(i==0){
+				ret.setParagraph(data.next().asText());
+				i++;
+			}
+			else{
+				ret.setKeywords(data.next().asText().split(", "));
+			}
+		}
+		return ret;
+	}
 }
