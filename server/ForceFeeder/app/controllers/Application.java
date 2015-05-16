@@ -46,7 +46,7 @@ public class Application extends Controller {
     	int templateNumber = r.getTNum();
 
     	WSRequestHolder holder = WS.url("http://thehoneybee.us/comedy/extract_url.php")
-    								.setQueryParameter("url",url);
+    								.setQueryParameter("ENTER_URL",url);
     	Promise<JsonNode> jsonPromise = holder.get().map(
 		    new Function<WSResponse, JsonNode>() {
 		        public JsonNode apply(WSResponse response) {
