@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<meta name="viewport" content='width=device-width, initial-scale=1'>
+		<link href='./bower_components/foundation/css/foundation.css' rel='stylesheet' >
+		<link href='./bower_components/animate.css/animate.min.ss' rel='stylesheet'>
+		<link href='http://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+	</head>
+	<style>
+		body {
+			padding:0;
+			margin:0;
+		}
+		h1,h2,p,li {
+			font-family:'Roboto',sans-serif;
+		}
+		h1,h2 {
+			padding:1em;
+		}
+		h2 {
+			margin:0;
+			text-align: center;
+			background:#fff;
+			color:#000;
+			letter-spacing: 0.1em;
+		}
+		a:hover {
+			color:#f2f2f2;
+		}
+
+		section {
+			height:100vh;
+			background-size: contain;
+			background-position: 50%;
+			background-color:#F87849;
+		}
+		.splash {
+			background-image: url('./assets/logo-rectangle.png');
+			background-repeat:no-repeat;
+		}
+		.copy {
+			padding-left:0;
+			padding-right:0;
+		}
+		.copy-1 {background-image: url('http://media.giphy.com/media/TaBJhZTUALPlm/giphy.gif')}
+		.copy-2 {background-image: url('http://media2.giphy.com/media/7xAcF05xlyTnO/giphy.gif');}
+		.copy-3 {
+			background-image:url('./assets/2x@logo-word-only.png');
+			background-size:50%;
+			background-repeat: no-repeat;
+		}
+		.tagline {
+			position:absolute;
+			font-size:1.5em;
+			top:130px;
+			left:50%;
+			background:#000;
+			color:#fff;
+			border-radius:0.2em;
+		}
+		.tagline:before {
+			content:'';
+			position:absolute;
+			margin:0 0 0 -33px;
+			width: 0; 
+			height: 0; 
+			border-top: 15px solid transparent;
+			border-bottom: 15px solid transparent; 
+			border-right:15px solid #000; 
+		}
+
+		.next {
+			color:#fff;
+			position:absolute;
+			top:220px;
+			left:55%;
+		}
+		.next span:first-child {padding-right:8px;}
+		.next span:last-child {padding-left:8px;}
+
+	</style>
+	<body>
+		<section class='splash medium-12 column'>
+			<h1 class='tagline'>f@#k words...</h1>
+			<a href='#' id='next' class='medium-2 column next'>
+				<span>→</span>
+				I agree
+				<span>←</span>
+			</a>
+		</section>
+		<section class='copy copy-1 medium-12 column'>
+			<h2>We all agree that words are fucking boring</h2>
+		</section>
+		<section class='copy copy-2 medium-12 column'>
+			<h2>But sometimes they’re a necessary evil</h2>
+		</section>
+		<section class='copy copy-3 medium-12 column'>
+			<h2>Introducing</h2>
+		</section>
+	</body>
+</html>
