@@ -84,6 +84,12 @@ public class Application extends Controller {
 
 				break;
 		}
+		response().setHeader("Access-Control-Allow-Origin","*");
+		response().setHeader("Access-Control-Allow-Methods","POST,GET,OPTIONS");
+		response().setHeader("Access-Control-Allow-Headers","X-PINGOTHER");
+		response().setHeader("Access-Control-Max-Age","1728000");
+		
+
 
 		return ok(ret);
 
