@@ -15,6 +15,7 @@ import play.libs.F.Function;
 import play.libs.F.Promise;
 
 import java.io.IOException;
+import java.lang.Exception;
 import java.util.Random;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -45,12 +46,12 @@ public class Application extends Controller {
     	String url = r.getUrl();
     	int templateNumber = r.getTNum();
     	String new_url = "http://thehoneybee.us/comedy/extract_url.php";
-    	System.out.println(new_url);
+    	//System.out.println(new_url);
     	WSRequestHolder holder = WS.url(new_url).setQueryParameter("ENTER_URL",url);
     	Promise<JsonNode> jsonPromise = holder.get().map(
 		    new Function<WSResponse, JsonNode>() {
 		        public JsonNode apply(WSResponse response) {
-		        	System.out.println("RESPONSE\n"+response.getBody());
+		        	//System.out.println("RESPONSE\n"+response.getBody());
 		            JsonNode json = response.asJson();
 		            return json;
 		        }
@@ -174,7 +175,13 @@ public class Application extends Controller {
 			imgdiv = divs.get(j);
 			if(j==rando)break;
 		}
-		String almost = imgdiv.getElementsByTag("a").first().attr("href");
+		String almost;
+		try{
+			almost = imgdiv.getElementsByTag("a").first().attr("href");
+		}
+		catch(Exception e){
+			return "";
+		}
 		
 		int idx1=almost.indexOf("=")+1;
 		int idx2=almost.indexOf("&");
@@ -218,7 +225,7 @@ public class Application extends Controller {
 				ret = gifObj.get("images").get("fixed_height").get("url").asText();
 			}
 		}
-		System.out.println(ret);
+		//System.out.println(ret);
 		return ret;
 	}
 
