@@ -1,0 +1,103 @@
+body {
+	padding:0;
+	margin:0;
+}
+iframe {
+	width:100%;
+	height:85%;
+}
+ul li {list-style:none;}
+h1,h2,p,li, a{
+	font-family:'Roboto',sans-serif;
+}
+h1,h2 {
+	padding:1em;
+	letter-spacing: 0.1em;
+}
+h2 {
+	margin:0;
+	text-align: center;
+	background:#fff;
+	color:#000;
+}
+a {
+	color:#F87849;
+}
+section {
+	height:100vh;
+	background-size: contain;
+	background-position: 50%;
+	background-color:#F87849;
+}
+
+.splash {
+	background-image: url('../assets/logo-rectangle.png');
+	background-repeat:no-repeat;
+}
+.copy {
+	padding-left:0;
+	padding-right:0;
+}
+.copy-1 {background-image: url('http://media.giphy.com/media/TaBJhZTUALPlm/giphy.gif')}
+.copy-2 {background-image: url('http://media2.giphy.com/media/7xAcF05xlyTnO/giphy.gif');}
+.copy-3 {
+	background-image:url('../assets/2x@logo-word-only.png');
+	background-size:50%;
+	background-repeat: no-repeat;
+}
+.tagline {
+	position:absolute;
+	font-size:1.5em;
+	top:130px;
+	left:50%;
+	background:#000;
+	color:#fff;
+	border-radius:0.2em;
+}
+.tagline:before {
+	content:'';
+	position:absolute;
+	margin:0 0 0 -33px;
+	width: 0; 
+	height: 0; 
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent; 
+	border-right:15px solid #000; 
+}
+.tagline span {
+	display:block;
+	font-size:0.4em;
+}
+.next {
+	font-size:1em;
+	position:absolute;
+	width:50%;
+	bottom:0;
+}
+.next:last-child {
+	right:0;
+	text-align: right;
+}
+footer {
+	text-align:center;
+	padding:2em;
+	background:#fff;
+}
+.social li {
+	float:left;
+	margin:1em 10px 1em 0;
+}
+@media only screen and (max-width: 40em) {
+	.splash {
+		height:80%;
+		background-position:bottom;
+	}
+	.tagline,
+	.next {
+		display:none;
+	}
+	.social {
+		width:50%;
+		margin:0 25%;
+	}
+}
