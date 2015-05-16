@@ -44,12 +44,13 @@ public class Application extends Controller {
     	
     	String url = r.getUrl();
     	int templateNumber = r.getTNum();
-
-    	WSRequestHolder holder = WS.url("http://thehoneybee.us/comedy/extract_url.php")
-    								.setQueryParameter("ENTER_URL",url);
+    	String new_url = "http://thehoneybee.us/comedy/extract_url.php";
+    	System.out.println(new_url);
+    	WSRequestHolder holder = WS.url(new_url).setQueryParameter("ENTER_URL",url);
     	Promise<JsonNode> jsonPromise = holder.get().map(
 		    new Function<WSResponse, JsonNode>() {
 		        public JsonNode apply(WSResponse response) {
+		        	System.out.println("RESPONSE\n"+response.getBody());
 		            JsonNode json = response.asJson();
 		            return json;
 		        }
@@ -57,7 +58,8 @@ public class Application extends Controller {
 		);
 
 
-    	JsonNode response = jsonPromise.get(5000);
+    	JsonNode response = jsonPromise.get(100000);
+    	
     	Iterator<JsonNode> arrs = response.elements();
 
     	while(arrs.hasNext()){
@@ -213,7 +215,7 @@ public class Application extends Controller {
 		while(dataIterator.hasNext()){
 			JsonNode gifObj = dataIterator.next();
 			if(rando==i || !dataIterator.hasNext()){
-				ret = gifObj.get("embed_url").asText();
+				ret = gifObj.get("images").get("fixed_height").get("url").asText();
 			}
 		}
 		System.out.println(ret);
