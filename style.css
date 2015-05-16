@@ -31,7 +31,7 @@ section {
 }
 
 .splash {
-	background-image: url('./assets/logo-rectangle.png');
+	background-image: url('../assets/logo-rectangle.png');
 	background-repeat:no-repeat;
 }
 .copy {
@@ -41,7 +41,7 @@ section {
 .copy-1 {background-image: url('http://media.giphy.com/media/TaBJhZTUALPlm/giphy.gif')}
 .copy-2 {background-image: url('http://media2.giphy.com/media/7xAcF05xlyTnO/giphy.gif');}
 .copy-3 {
-	background-image:url('./assets/2x@logo-word-only.png');
+	background-image:url('../assets/2x@logo-word-only.png');
 	background-size:50%;
 	background-repeat: no-repeat;
 }
