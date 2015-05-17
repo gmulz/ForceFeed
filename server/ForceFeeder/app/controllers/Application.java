@@ -78,10 +78,13 @@ public class Application extends Controller {
 				ret = processTemplateOne(paragraphList);
 				break;
 			case 2:
+				ret = processTemplateTwo(paragraphList,"cats");
 				break;
 			case 3:
+				ret = processTemplateThree(paragraphList,"cats");
 				break;
 			case 4:
+				ret = processTemplateFour(paragraphList);
 				break;
 			default:
 
@@ -101,6 +104,131 @@ public class Application extends Controller {
     }
 
 
+	private static ObjectNode processTemplateFour(ArrayList<Paragraph> paragraphs){
+    	Random random = new Random();
+    	ArrayList<ForceFedParagraph> newParagraphs = new ArrayList<ForceFedParagraph>();
+    	for(Paragraph paragraph : paragraphs){
+    		ForceFedParagraph f = new ForceFedParagraph();
+    		f.summary = paragraph.getParagraph().split("\\. ")[0];
+    		String[] keywords = paragraph.getKeywords();
+    		for(int i=0;i<20;i++){
+    			
+    			String keyword = keywords[random.nextInt(keywords.length)];
+    			String imgurl = getGiphyGif(keyword);
+    			if(imgurl.equals("")){
+    				try{
+    					imgurl = getGooglePicture(keyword);
+    				}
+    				catch(IOException e){
+    					System.out.println("derp");
+    				}
+    			}
+    			f.gifs.add(imgurl);
+    		}
+    		newParagraphs.add(f);
+    	}
+    	ObjectNode result = Json.newObject();
+    	result.put("template",1);
+    	ArrayNode contentArray = result.putArray("content");
+    	for(ForceFedParagraph ffp : newParagraphs){
+    		//ObjectNode contentObj = contentArray.addObject();
+    		//contentObj.put("type","text");
+    		//contentObj.put("content",ffp.summary);
+    		for(String image : ffp.gifs){
+    			ObjectNode newImageObj = contentArray.addObject();
+    			newImageObj.put("type","image");
+    			newImageObj.put("content",image);
+    		}
+    	}
+    	return result;
+    }
+
+
+	private static ObjectNode processTemplateThree(ArrayList<Paragraph> paragraphs,String theme){
+    	Random random = new Random();
+    	ArrayList<ForceFedParagraph> newParagraphs = new ArrayList<ForceFedParagraph>();
+    	for(Paragraph paragraph : paragraphs){
+    		ForceFedParagraph f = new ForceFedParagraph();
+    		f.summary = paragraph.getParagraph().split("\\. ")[0];
+
+    		String[] keywords = paragraph.getKeywords();
+    		for(int i=0;i<20;i++){
+    			String keyword = keywords[random.nextInt(keywords.length)] + " "+theme;
+    			String imgurl = getGiphyGif(keyword);
+    			if(imgurl.equals("")){
+    				try{
+    					imgurl = getGooglePicture(keyword);
+    				}
+    				catch(IOException e){
+    					System.out.println("derp");
+    				}
+    			}
+    			f.gifs.add(imgurl);
+    		}
+    		newParagraphs.add(f);
+    	}
+    	ObjectNode result = Json.newObject();
+    	result.put("template",1);
+    	ArrayNode contentArray = result.putArray("content");
+    	for(ForceFedParagraph ffp : newParagraphs){
+    		//ObjectNode contentObj = contentArray.addObject();
+    		//contentObj.put("type","text");
+    		//contentObj.put("content",ffp.summary);
+    		for(String image : ffp.gifs){
+    			ObjectNode newImageObj = contentArray.addObject();
+    			newImageObj.put("type","image");
+    			newImageObj.put("content",image);
+    		}
+    	}
+    	return result;
+    }
+
+
+    private static ObjectNode processTemplateTwo(ArrayList<Paragraph> paragraphs,String theme){
+    	Random random = new Random();
+    	ArrayList<ForceFedParagraph> newParagraphs = new ArrayList<ForceFedParagraph>();
+    	for(Paragraph paragraph : paragraphs){
+    		ForceFedParagraph f = new ForceFedParagraph();
+    		f.summary = paragraph.getParagraph().split("\\. ")[0];
+    		String[] keywords = paragraph.getKeywords();
+    		for(int i=0;i<3;i++){
+    			int gifOrPic = random.randInt(5);
+    			String keyword = keywords[random.nextInt(keywords.length)];
+    			String imgurl = "";
+
+    			if(gifOrPic == 0){
+    				getGiphyGif(keyword);
+    			}
+
+    			if(imgurl.equals("")){
+    				try{
+    					imgurl = getGooglePicture(keyword);
+    				}
+    				catch(IOException e){
+    					System.out.println("derp");
+    				}
+    			}
+    			f.gifs.add(imgurl);
+    		}
+    		newParagraphs.add(f);
+    	}
+    	ObjectNode result = Json.newObject();
+    	result.put("template",1);
+    	ArrayNode contentArray = result.putArray("content");
+    	for(ForceFedParagraph ffp : newParagraphs){
+    		ObjectNode contentObj = contentArray.addObject();
+    		contentObj.put("type","text");
+    		contentObj.put("content",ffp.summary);
+    		for(String image : ffp.gifs){
+    			ObjectNode newImageObj = contentArray.addObject();
+    			newImageObj.put("type","image");
+    			newImageObj.put("content",image);
+    		}
+    	}
+    	return result;
+    }
+
+
     private static ObjectNode processTemplateOne(ArrayList<Paragraph> paragraphs){
     	Random random = new Random();
     	ArrayList<ForceFedParagraph> newParagraphs = new ArrayList<ForceFedParagraph>();
@@ -108,10 +236,16 @@ public class Application extends Controller {
     		ForceFedParagraph f = new ForceFedParagraph();
     		f.summary = paragraph.getParagraph().split("\\. ")[0];
 
-    		for(int i=0;i<5;i++){
+    		for(int i=0;i<2;i++){
     			String[] keywords = paragraph.getKeywords();
+    			int gifOrPic = random.randInt(5);
     			String keyword = keywords[random.nextInt(keywords.length)];
-    			String imgurl = getGiphyGif(keyword);
+    			String imgurl = "";
+
+    			if(gifOrPic == 0){
+    				getGiphyGif(keyword);
+    			}
+
     			if(imgurl.equals("")){
     				try{
     					imgurl = getGooglePicture(keyword);
